@@ -1,6 +1,5 @@
-// Функция, возвращающая случайное целое число из переданного диапозона включительно  
-// продумать, как будет вести себя функция, если передать число "до" диапозона меньше или равное "от"
-let getRandomInteger = function(min, max) {
+// Функция, возвращающая случайное целое число
+let getRandomInteger = (min, max) => {
   if (min <0 || max <0) {
     return console.log('Числа должны быть положительные.');  
   };
@@ -10,14 +9,10 @@ let getRandomInteger = function(min, max) {
   let rand = min + Math.floor(Math.random() * (max - min + 1));
   return rand;
 };
-
-
-// Функция, возвращающая случайно число с плавающей точкой из переданного диапозона включительно
-// продумать, как будет вести себя функция, если передать число "до" диапозона меньше или равное "от"
-
-let getRandomFloat = function(min, max, numberOfSigns) {
+// Функция, возвращающая случайно число с плавающей точкой
+let getRandomFloat = (min, max, numberOfSigns) => {
   if (min <0 || max <0) {
-      return console.log('Числа должны быть положительные.');
+    return console.log('Числа должны быть положительные.');
   };
   if (max <= min) {
     [max, min] = [min, max];  
