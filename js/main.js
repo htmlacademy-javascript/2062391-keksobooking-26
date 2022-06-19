@@ -32,36 +32,36 @@ let getRandomInteger = (min, max) => {
 
 const creatAd = () => {
     return {
-    author: getAuthor();
-    offer: getOffer();
-    location: getLocation();
+    author: getAuthor(),
+    offer: getOffer(),
+    location: getLocation(),
     };
 };
 
 const getAuthor = () => {
     return {
-    avatar: `img/avatars/user${getRandomInteger(0, 10)}.png`
+    avatar: `img/avatars/user${getRandomInteger(0, 10)}.png`,
     };
 };
 const getOffer = () => {
     return {
-    title: 'Взгляни-ка!';
-    address: 'location.lat, location.lng';
-    price: getRandomInteger(0,);
-    type: typeOfhousing[getRandomInteger(0, typeOfhousing.length-1)];
-    rooms: getRandomInteger(0,);
-    guests: getRandomInteger(0,);
-    checkin: CHECKHIN[getRandomInteger(0, CHECKIN.length-1)];
-    chechout: CHECKOUT[getRandomInteger(0, CHECKOUT.length-1)];
-    features: FEATURES.slice(getRandomInteger(getRandomInteger(0, FEATURES.length-1), getRandomInteger(0, FEATURES.length-1)));
-    description: 'Чисто, красиво, душевно';
-    photos: PHOTOS.slice(getRandomInteger(getRandomInteger(0, PHOTOS.length-1), getRandomInteger(0, PHOTOS.length-1)));
+    title: 'Взгляни-ка!',
+    address: 'location.lat, location.lng',
+    price: getRandomInteger(0,),
+    type: typeOfhousing[getRandomInteger(0, typeOfhousing.length-1)],
+    rooms: getRandomInteger(0,),
+    guests: getRandomInteger(0,),
+    checkin: CHECKHIN[getRandomInteger(0, CHECKIN.length-1)],
+    chechout: CHECKOUT[getRandomInteger(0, CHECKOUT.length-1)],
+    features: FEATURES.slice(getRandomInteger(getRandomInteger(0, FEATURES.length-1), getRandomInteger(0, FEATURES.length-1))),
+    description: 'Чисто, красиво, душевно',
+    photos: PHOTOS.slice(getRandomInteger(getRandomInteger(0, PHOTOS.length-1), getRandomInteger(0, PHOTOS.length-1))),
     };
 };
 const getLocation = () => {
     return {
-    lat: getRandomFloat(35.65000, 35.7000, 5);
-    lng: getRandomFloat(139.70000, 139.80000, 5);
+    lat: getRandomFloat(35.65000, 35.7000, 5),
+    lng: getRandomFloat(139.70000, 139.80000, 5),
     };
 };
 
