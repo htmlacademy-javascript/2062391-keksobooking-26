@@ -1,4 +1,4 @@
-const TYPE_Of_HOUSING = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
+const TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN = ['12:00', '13:00', '14:00'];
 const CHECKOUT = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -48,10 +48,10 @@ const getOffer = () => {
     title: 'Взгляни-ка!',
     address: 'location.lat, location.lng',
     price: getRandomInteger(0,),
-    type: typeOfhousing[getRandomInteger(0, typeOfhousing.length-1)],
+    type: TYPE_OF_HOUSING[getRandomInteger(0, TYPE_OF_HOUSING.length-1)],
     rooms: getRandomInteger(0,),
     guests: getRandomInteger(0,),
-    checkin: CHECKHIN[getRandomInteger(0, CHECKIN.length-1)],
+    checkin: CHECKIN[getRandomInteger(0, CHECKIN.length-1)],
     chechout: CHECKOUT[getRandomInteger(0, CHECKOUT.length-1)],
     features: FEATURES.slice(getRandomInteger(getRandomInteger(0, FEATURES.length-1), getRandomInteger(0, FEATURES.length-1))),
     description: 'Чисто, красиво, душевно',
