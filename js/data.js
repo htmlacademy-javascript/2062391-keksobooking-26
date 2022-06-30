@@ -1,5 +1,5 @@
-import {getRandomInteger} from "./util";
-import {getRandomFloat} from "./util";
+import {getRandomInteger} from "./util.js";
+import {getRandomFloat} from "./util.js";
 
 const TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECK_IN_OUT = ['12:00', '13:00', '14:00'];

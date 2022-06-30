@@ -1,3 +1,3 @@
-import { greatAd } from "./data";
+import { greatAd } from "./data.js";
 
 console.log(greatAd());
