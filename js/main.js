@@ -1,4 +1,3 @@
-import { greatAd } from './data.js';
+import './popup.js';
 
-// eslint-disable-next-line no-console
-console.log(greatAd());
+// document.querySelector('.map__canvas').textContent = 'dfsafsfsf'
