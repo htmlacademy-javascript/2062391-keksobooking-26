@@ -35,7 +35,7 @@ const getOffer = () => (
     price: getRandomInteger(0, 100000),
     type: TYPE_OF_HOUSING[getRandomInteger(0, TYPE_OF_HOUSING.length-1)],
     rooms: getRandomInteger(1, 10),
-    guests: getRandomInteger(0, 12),
+    guests: getRandomInteger(1, 12),
     checkin: CHECK_IN_OUT[getRandomInteger(0, CHECK_IN_OUT.length-1)],
     chechout: CHECK_IN_OUT[getRandomInteger(0, CHECK_IN_OUT.length-1)],
     features: FEATURES.slice(getRandomInteger(getRandomInteger(0, FEATURES.length-1), getRandomInteger(0, FEATURES.length-1))),
