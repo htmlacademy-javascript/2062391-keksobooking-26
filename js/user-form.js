@@ -1,14 +1,17 @@
 const form = document.querySelector('.ad-form');
 
 const pristine = new Pristine(form, {
-  classTo: 'ad-form__label',
-  errorTextParent: 'ad-form__label',
+  classTo: 'ad-form__element',
+  errorClass: 'ad-form__element--invalid',
+  successClass: 'ad-form__element--valid',
+  errorTextParent: 'ad-form__element',
+  errorTextTag: 'span',
   errorTextClass: 'ad-form__error-text',
 });
 
 // Валидация для "Заголовка объявления"
 function validateTitle (value) {
-  return value.length > 30 && value.length < 100;
+  return value.length >= 30 && value.length <= 100;
 }
 
 pristine.addValidator(
@@ -17,42 +20,59 @@ pristine.addValidator(
   'Длина заголовка от 30 до 100 символов');
 
 // Валидация для поля "Цена за ночь"
-const userPrice = form.querySelector('.price');
+const userPrice = form.querySelector('#price');
+const userType = form.querySelector('#type');
 const minPrice = {
-  'Бунгало' : 0,
-  'Квартира' : 1000,
-  'Отель' : 3000,
-  'Дом' : 5000,
-  'Дворец' : 10000,
+  'bungalow' : 0,
+  'flat' : 1000,
+  'hotel' : 3000,
+  'house' : 5000,
+  'palace' : 10000,
 };
 
 function validatePrice (value) {
-  const unit = form.querySelector('[name="type"]:selected');
-  return value.length && parseInt(value, 10) >= minPrice[unit.value];  // value.length ?
+  return (value.length && (Number(value) >= minPrice[userType.value] && Number(value) <= 100000));
 }
+
+const getTypeName = () => {
+  switch (userType.value) {
+    case 'bungalow':
+      return 'Бунгало';
+    case 'flat':
+      return 'Квартиру';
+    case 'house':
+      return 'Дом';
+    case 'hotel':
+      return 'Отель';
+    case 'palace':
+      return 'Дворец';
+  }
+};
 
 function getPriceErrorMessage () {
-  const unit = form.querySelector('[name="type"]:selected');
-  return `Минимальная цена за ${unit.value} - ${minPrice[unit.value]} руб. за ночь`;
+  return `Минимальная цена за ${getTypeName()} - ${minPrice[userType.value]} руб. за ночь`;
 }
 
-pristine.addValidator(userPrice, validatePrice, getPriceErrorMessage);
-
-function onPriceChange () {                         // вопрос тут с правильностью?
-  userPrice.placeholder = minPrice[this.value];
-  pristine.validate(userPrice);
+function otherOfferType () {
+  return (userPrice.value = minPrice[userType.value]);
 }
 
-form.querySelector('.type').addEventListener('change', onPriceChange);
+form.querySelector('#price').addEventListener('change', validatePrice);
+form.querySelector('#type').addEventListener('change', otherOfferType);
+
+pristine.addValidator(
+  userPrice,
+  validatePrice,
+  getPriceErrorMessage);
 
 // Валидация синхранизации поля "Количество комнат" с полем "Количество гостей"
 const roomNumber = form.querySelector('#room_number');
 const roomCapacity = form.querySelector('#capacity');
 const capacityOption = {
-  '1 комната': ['для 1 гостя'],
-  '2 комнаты' : ['для 2 гостей', 'для 1 гостя'],
-  '3 комнаты' : ['для 3 гостей','для 2 гостей','для 1 гостя'],
-  '100 комнат' : ['не для гостей'],
+  '1': ['1'],
+  '2' : ['2', '1'],
+  '3' : ['3','2','1'],
+  '100' : ['0'],
 };
 
 function validateCapacity () {
@@ -60,13 +80,30 @@ function validateCapacity () {
 }
 
 function getCapacityErrorMessage () {
-  return 'Количество комнат не соответствует количеству гостей';
+  switch(roomNumber.value) {
+    case '1':
+    case '2':
+    case '3':
+      return `Возможное количество гостей: ${capacityOption[roomNumber.value].join(',')}`;
+    case '100':
+      return 'Не для гостей';
+  }
 }
 
-pristine.addValidator(roomNumber, validateCapacity, getCapacityErrorMessage);
-pristine.addValidator(roomCapacity, validateCapacity, getCapacityErrorMessage);
+pristine.addValidator(
+  roomNumber,
+  validateCapacity,
+  getCapacityErrorMessage);
+pristine.addValidator(
+  roomCapacity,
+  validateCapacity,
+  getCapacityErrorMessage);
 
-form.addEventListener('submit',(evt) => {
+roomCapacity.addEventListener('change', () => {
+  pristine.validate(roomCapacity);
+});
+
+form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
