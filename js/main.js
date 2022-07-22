@@ -1,5 +1,6 @@
-import './popup.js';
+import './map.js';
 import './user-form.js';
-// import {toInActive} from './form.js';
+import './slider.js';
+//import {toInActive} from './form.js';
 
 //toInActive();

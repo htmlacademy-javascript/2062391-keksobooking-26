@@ -53,7 +53,7 @@ function validatePrice (value) {
 }
 
 function otherOfferType () {
-  return (userPrice.placeholder = minPrice[userType.value]);
+  return (userPrice.value = minPrice[userType.value]);
 }
 
 function validateCapacity () {
