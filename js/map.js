@@ -1,5 +1,4 @@
-import { greatAd } from './data.js';
-import {toActivate} from './form.js';
+import { toActivate } from './form.js';
 
 const map = L.map('map-canvas').on('load', () => {
   toActivate();
@@ -17,8 +16,8 @@ L.tileLayer(
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
-  iconSize: [44, 44],
-  iconAnchor: [22, 44],
+  iconSize: [52, 52],
+  iconAnchor: [26, 52],
 });
 
 const offerPinIcon = L.icon({
@@ -78,7 +77,7 @@ const creatCustomPopup = (point) => {
   } else {
     cardElement.querySelector('.popup__text--time').classList.add('hidden');
   }
-  if (point.offer.features.length !== 0) {
+  if (point.offer.features) {
     const featuresContainer = cardElement.querySelector('.popup__features');
     const featuresList = featuresContainer.querySelectorAll('.popup__feature');
     featuresList.forEach((featureListItem) => {
@@ -97,7 +96,7 @@ const creatCustomPopup = (point) => {
   } else {
     cardElement.querySelector('.popup__description').classList.add('hidden');
   }
-  if (point.offer.photos.length !== 0) {
+  if (point.offer.photos) {
     const photoContainer = cardElement.querySelector('.popup__photos');
     point.offer.photos.forEach((offerPhoto) => {
       const photoTemplate = photoContainer.querySelector('.popup__photo').cloneNode(true);
@@ -129,25 +128,28 @@ const mainPinMarker = L.marker(
 
 mainPinMarker.addTo(map);
 
+mainPinMarker.on('moveend', (evt) => {
+  document.querySelector('.ad-form').querySelector('#address').value = `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
+});
+
 const markerGroup = L.layerGroup().addTo(map);
 
-const createMarker = (point) => {
-  const offerMarker = L.marker(
-    {
-      lat: point.location.lat,
-      lng: point.location.lng,
-    },
-    {
-      icon: offerPinIcon,
-    },
-  );
-  offerMarker
-    .addTo(markerGroup)
-    .bindPopup(creatCustomPopup(point));
+const createMarker = (offersData) => {
+  offersData.forEach((point) => {
+    const offerMarker = L.marker(
+      {
+        lat: point.location.lat,
+        lng: point.location.lng,
+      },
+      {
+        icon: offerPinIcon,
+      },
+    );
+    offerMarker
+      .addTo(markerGroup)
+      .bindPopup(creatCustomPopup(point));
+  });
 };
 
-const similarPoints = greatAd();
-
-similarPoints.forEach((point) => {
-  createMarker(point);
-});
+export { createMarker };
+export { mainPinMarker };
