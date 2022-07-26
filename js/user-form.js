@@ -1,11 +1,19 @@
+import { sendUserOfferData } from './api.js';
+import { isEscapeKey } from './util.js';
+import { mainPinMarker } from './map.js';
+
 const form = document.querySelector('.ad-form');
 
+const submitButton = form.querySelector('.ad-form__submit');
+const resetButton = form.querySelector('.ad-form__reset');
 const userPrice = form.querySelector('#price');
 const userType = form.querySelector('#type');
 const userTimeIn = form.querySelector('#timein');
 const userTimeOut = form.querySelector('#timeout');
 const userRoomNumber = form.querySelector('#room_number');
 const userRoomCapacity = form.querySelector('#capacity');
+const successMessage = document.querySelector('#success').content;
+const errorMessage = document.querySelector('#error').content;
 
 const minPrice = {
   'bungalow' : 0,
@@ -138,7 +146,87 @@ userRoomCapacity.addEventListener('change', () => {
   pristine.validate(userRoomCapacity);
 });
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const clearForm = () => {
+  resetButton.click();
+  mainPinMarker.setLatLng({
+    lat: 35.68236,
+    lng: 139.75317,
+  });
+  document.querySelector('.ad-form').querySelector('#address').value = `${mainPinMarker.getLatLng().lat.toFixed(5)}, ${mainPinMarker.getLatLng().lng.toFixed(5)}`;
+};
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую ..';
+};
+const unBlockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const onPopupEscKeydown1 = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessMessage();
+  }
+};
+const onPopupEscKeydown2 = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeErrorMessage();
+  }
+};
+
+const onClick1 = () => {
+  closeSuccessMessage();
+};
+
+const onClick2 = () => {
+  closeErrorMessage();
+};
+
+function openSuccessMessage () {
+  document.body.append(successMessage);
+  document.addEventListener('keydown', onPopupEscKeydown1);
+  document.addEventListener('click', onClick1);
+}
+
+function closeSuccessMessage () {
+  document.body.removeChild(document.querySelector('.success'));
+  document.removeEventListener('keydown', onPopupEscKeydown1);
+}
+
+function openErrorMessage () {
+  document.body.append(errorMessage);
+  document.addEventListener('keydown', onPopupEscKeydown2);
+  document.addEventListener('click', onClick2);
+}
+
+function closeErrorMessage () {
+  document.body.removeChild(document.querySelector('.error'));
+  document.removeEventListener('keydown', onPopupEscKeydown2);
+}
+
+const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendUserOfferData(
+        () => {
+          onSuccess();
+          unBlockSubmitButton();
+          openSuccessMessage();
+        },
+        () => {
+          unBlockSubmitButton();
+          openErrorMessage();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
+
+export { clearForm, setUserFormSubmit };

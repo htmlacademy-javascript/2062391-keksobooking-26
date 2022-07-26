@@ -1,23 +1,29 @@
-const getRandomInteger = (min, max) => {
-  if (min <0 || max <0) {
-    throw new Error('Числа должны быть положительные.');
-  }
-  if (max <= min) {
-    [max, min] = [min, max];
-  }
-  const rand = min + Math.floor(Math.random() * (max - min + 1));
-  return rand;
-};
-const getRandomFloat = (min, max, numberOfSigns) => {
-  if (min <0 || max <0) {
-    throw new Error('Числа должны быть положительные.');
-  }
-  if (max <= min) {
-    [max, min] = [min, max];
-  }
-  const rand = min + Math.random() * (max-min);
-  return ( Math.round(rand*Math.pow(10, numberOfSigns))/ Math.pow(10, numberOfSigns) );
+const ALERT_SHOW_TIME = 5000;
+
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'centr';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
 };
 
-export {getRandomInteger};
-export {getRandomFloat};
+// eslint-disable-next-line arrow-body-style
+const isEscapeKey = (evt) => {
+  return evt.key === 'Escape';
+};
+
+export { showAlert, isEscapeKey };
