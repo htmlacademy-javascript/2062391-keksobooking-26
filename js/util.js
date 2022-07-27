@@ -26,4 +26,18 @@ const isEscapeKey = (evt) => {
   return evt.key === 'Escape';
 };
 
-export { showAlert, isEscapeKey };
+const setFilterChange = (cb) => {
+  document.querySelectorAll('.map__filter').forEach((mapFilter) => {
+    mapFilter.addEventListener('change',  cb);
+  });
+};
+
+const debounce = (cb, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
+  };
+};
+
+export { showAlert, isEscapeKey, setFilterChange, debounce };
