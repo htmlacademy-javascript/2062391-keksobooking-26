@@ -137,31 +137,32 @@ mainPinMarker.on('moveend', (evt) => {
 const markerGroup = L.layerGroup().addTo(map);
 
 const getOfferRank = (user) => {
+  //const housingTypeFilter = document.querySelector('#housing-type');
   const housingPriceFilter = document.querySelector('#housing-price');
   const housingRoomsFilter = document.querySelector('#housing-rooms');
   const housingQuestsFilter = document.querySelector('#housing-guests');
-  const housingFeaturesFilter = document.querySelectorAll('.map__checkbox');
+  const housingFeaturesFilter = document.querySelector('#housing-features').querySelectorAll('input');
 
   let rank = 0;
 
-  if (housingPriceFilter.value === 'low' && user.offer.price < 10000) {
+  if (housingPriceFilter.value === 'low' && user.offer.price < 10000 || housingPriceFilter.value === 'any') {
     rank += 5;
   }
-  if (housingPriceFilter.value === 'middle' && 10000 <= user.offer.price <= 50000) {
+  if (housingPriceFilter.value === 'middle' && 10000 <= user.offer.price <= 50000 || housingPriceFilter.value === 'any') {
     rank += 5;
   }
-  if (housingPriceFilter.value === 'high' && user.offer.price > 50000) {
+  if (housingPriceFilter.value === 'high' && user.offer.price > 50000 || housingPriceFilter.value === 'any') {
     rank += 5;
   }
-  if (user.offer.rooms === housingRoomsFilter.value) {
-    rank += 5;
+  if (housingRoomsFilter.value === user.offer.rooms || housingPriceFilter.value === 'any') {
+    rank += 4;
   }
-  if (user.offer.quests === housingQuestsFilter.value) {
-    rank += 5;
+  if (housingQuestsFilter.value === user.offer.quests || housingPriceFilter.value === 'any') {
+    rank += 4;
   }
   housingFeaturesFilter.forEach((feature) => {
-    if (feature.checked) {
-      rank +=3;
+    if (feature.checked && user.offer.features.includes(feature)) {
+      rank +=2;
     }
   });
 
@@ -176,8 +177,8 @@ const compareOffers = (offerA, offerB) => {
 
 const createMarker = (offersData) => {
   markerGroup.clearLayers();
-  offersData
-    .slice()
+  const filtredOffersData = offersData.filter((filtredOffer) => filtredOffer.offer.type === document.querySelector('#housing-type').value || document.querySelector('#housing-type').value === 'any');
+  filtredOffersData
     .sort(compareOffers)
     .slice(0, SIMILAR_OFFER_COUNT)
     .forEach((point) => {
@@ -194,28 +195,6 @@ const createMarker = (offersData) => {
         .addTo(markerGroup)
         .bindPopup(creatCustomPopup(point));
     });
-
-  if (document.querySelector('#housing-type').value !== 'any') {
-    markerGroup.clearLayers();
-    const filtredOffersData = offersData.filter((filtredOffer) => filtredOffer.offer.type === document.querySelector('#housing-type').value);
-    filtredOffersData
-      .sort(compareOffers)
-      .slice(0, SIMILAR_OFFER_COUNT)
-      .forEach((point) => {
-        const offerMarker = L.marker(
-          {
-            lat: point.location.lat,
-            lng: point.location.lng,
-          },
-          {
-            icon: offerPinIcon,
-          },
-        );
-        offerMarker
-          .addTo(markerGroup)
-          .bindPopup(creatCustomPopup(point));
-      });
-  }
 };
 
 export { createMarker };
