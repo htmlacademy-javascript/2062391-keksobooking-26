@@ -1,6 +1,8 @@
 import { toActivate } from './form.js';
-
+import {toInActive} from './form.js';
 const SIMILAR_OFFER_COUNT = 10;
+
+toInActive();
 
 const map = L.map('map-canvas').on('load', () => {
   toActivate();

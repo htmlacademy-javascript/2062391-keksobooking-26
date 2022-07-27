@@ -4,13 +4,15 @@ import { clearForm } from './user-form.js';
 import { setUserFormSubmit } from './user-form.js';
 import { setFilterChange, debounce } from './util.js';
 import './slider.js';
-//import {toInActive} from './form.js';
+import { toInActive, toActivate } from './form.js';
 
 const RERENDER_DELAY = 500;
 
-//toInActive();
+toInActive();
+
 getOfferData((offers) => {
   createMarker(offers);
+  toActivate();
   setFilterChange(debounce(
     () => createMarker(offers),
     RERENDER_DELAY,
