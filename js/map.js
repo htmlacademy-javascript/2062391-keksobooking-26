@@ -1,4 +1,8 @@
 import { toActivate } from './form.js';
+import {toInActive} from './form.js';
+const SIMILAR_OFFER_COUNT = 10;
+
+toInActive();
 
 const map = L.map('map-canvas').on('load', () => {
   toActivate();
@@ -134,21 +138,68 @@ mainPinMarker.on('moveend', (evt) => {
 
 const markerGroup = L.layerGroup().addTo(map);
 
-const createMarker = (offersData) => {
-  offersData.forEach((point) => {
-    const offerMarker = L.marker(
-      {
-        lat: point.location.lat,
-        lng: point.location.lng,
-      },
-      {
-        icon: offerPinIcon,
-      },
-    );
-    offerMarker
-      .addTo(markerGroup)
-      .bindPopup(creatCustomPopup(point));
+const getOfferRank = (user) => {
+  const housingTypeFilter = document.querySelector('#housing-type');
+  const housingPriceFilter = document.querySelector('#housing-price');
+  const housingRoomsFilter = document.querySelector('#housing-rooms');
+  const housingQuestsFilter = document.querySelector('#housing-guests');
+  const housingFeaturesFilter = document.querySelectorAll('.map__checkbox');
+
+  let rank = 0;
+
+  if (user.offer.type === housingTypeFilter.value) {
+    rank += 50;
+  }
+  if (housingPriceFilter.value === 'low' && user.offer.price < 10000) {
+    rank += 8;
+  }
+  if (housingPriceFilter.value === 'middle' && 10000 <= user.offer.price <= 50000) {
+    rank += 8;
+  }
+  if (housingPriceFilter.value === 'high' && user.offer.price > 50000) {
+    rank += 8;
+  }
+  if (user.offer.rooms === housingRoomsFilter.value) {
+    rank += 8;
+  }
+  if (user.offer.quests === housingQuestsFilter.value) {
+    rank += 8;
+  }
+  housingFeaturesFilter.forEach((feature) => {
+    if (feature.checked) {
+      rank +=6;
+    }
   });
+
+  return rank;
+};
+
+const compareOffers = (offerA, offerB) => {
+  const rankOfferA = getOfferRank(offerA);
+  const rankOfferB = getOfferRank(offerB);
+  return rankOfferB - rankOfferA;
+};
+
+const createMarker = (offersData) => {
+  markerGroup.clearLayers();
+  offersData
+    .slice()
+    .sort(compareOffers)
+    .slice(0, SIMILAR_OFFER_COUNT)
+    .forEach((point) => {
+      const offerMarker = L.marker(
+        {
+          lat: point.location.lat,
+          lng: point.location.lng,
+        },
+        {
+          icon: offerPinIcon,
+        },
+      );
+      offerMarker
+        .addTo(markerGroup)
+        .bindPopup(creatCustomPopup(point));
+    });
 };
 
 export { createMarker };
