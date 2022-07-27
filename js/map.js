@@ -1,8 +1,6 @@
 import { toActivate } from './form.js';
-import {toInActive} from './form.js';
-const SIMILAR_OFFER_COUNT = 10;
 
-toInActive();
+const SIMILAR_OFFER_COUNT = 10;
 
 const map = L.map('map-canvas').on('load', () => {
   toActivate();
@@ -139,7 +137,6 @@ mainPinMarker.on('moveend', (evt) => {
 const markerGroup = L.layerGroup().addTo(map);
 
 const getOfferRank = (user) => {
-  const housingTypeFilter = document.querySelector('#housing-type');
   const housingPriceFilter = document.querySelector('#housing-price');
   const housingRoomsFilter = document.querySelector('#housing-rooms');
   const housingQuestsFilter = document.querySelector('#housing-guests');
@@ -147,27 +144,24 @@ const getOfferRank = (user) => {
 
   let rank = 0;
 
-  if (user.offer.type === housingTypeFilter.value) {
-    rank += 50;
-  }
   if (housingPriceFilter.value === 'low' && user.offer.price < 10000) {
-    rank += 8;
+    rank += 5;
   }
   if (housingPriceFilter.value === 'middle' && 10000 <= user.offer.price <= 50000) {
-    rank += 8;
+    rank += 5;
   }
   if (housingPriceFilter.value === 'high' && user.offer.price > 50000) {
-    rank += 8;
+    rank += 5;
   }
   if (user.offer.rooms === housingRoomsFilter.value) {
-    rank += 8;
+    rank += 5;
   }
   if (user.offer.quests === housingQuestsFilter.value) {
-    rank += 8;
+    rank += 5;
   }
   housingFeaturesFilter.forEach((feature) => {
     if (feature.checked) {
-      rank +=6;
+      rank +=3;
     }
   });
 
@@ -200,6 +194,28 @@ const createMarker = (offersData) => {
         .addTo(markerGroup)
         .bindPopup(creatCustomPopup(point));
     });
+
+  if (document.querySelector('#housing-type').value !== 'any') {
+    markerGroup.clearLayers();
+    const filtredOffersData = offersData.filter((filtredOffer) => filtredOffer.offer.type === document.querySelector('#housing-type').value);
+    filtredOffersData
+      .sort(compareOffers)
+      .slice(0, SIMILAR_OFFER_COUNT)
+      .forEach((point) => {
+        const offerMarker = L.marker(
+          {
+            lat: point.location.lat,
+            lng: point.location.lng,
+          },
+          {
+            icon: offerPinIcon,
+          },
+        );
+        offerMarker
+          .addTo(markerGroup)
+          .bindPopup(creatCustomPopup(point));
+      });
+  }
 };
 
 export { createMarker };

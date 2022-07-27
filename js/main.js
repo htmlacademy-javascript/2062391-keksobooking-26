@@ -5,6 +5,7 @@ import { setUserFormSubmit } from './user-form.js';
 import { setFilterChange, debounce } from './util.js';
 import './slider.js';
 import { toInActive, toActivate } from './form.js';
+import './avatar.js';
 
 const RERENDER_DELAY = 500;
 
