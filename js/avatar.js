@@ -8,9 +8,7 @@ const photoPreview = document.querySelector('.ad-form__photo');
 avatarFileChooser.addEventListener('change', () => {
   const file = avatarFileChooser.files[0];
   const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((it) => {
-    return fileName.endsWith(it);
-  });
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
 
   if (matches) {
     avatarPreview.src = URL.createObjectURL(file);
@@ -20,9 +18,7 @@ avatarFileChooser.addEventListener('change', () => {
 photoFileChooser.addEventListener('change', () => {
   const file = photoFileChooser.files[0];
   const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((it) => {
-    return fileName.endsWith(it);
-  });
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
 
   if (matches) {
     photoPreview.innerHTML = '';
